@@ -7,6 +7,5 @@ export default () => ({
       password: process.env.DATABASE_PASSWORD || 'password',
       name: process.env.DATABASE_NAME || 'test',
     },
-    // Add more configuration sections as needed
   });
   

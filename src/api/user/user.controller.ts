@@ -12,14 +12,20 @@ export class UserController {
     return this.userService.create(createUserDto);
   }
 
-  @Get()
-  findAll() {
-    return this.userService.findAll();
-  }
+  // @Get()
+  // findAll() {
+  //   return this.userService.findAll();
+  // }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.userService.findOne(+id);
+  findOneById(@Param('id') id: string) {
+    return this.userService.findOneById(id);
+  }
+
+  @Get()
+  findOneByEmailAndPassword(@Body() emailAndPassword: { email: string, password: string }) {
+    const { email, password } = emailAndPassword;
+    return this.userService.findOneByEmailAndPassword(email, password);
   }
 
   @Patch(':id')
@@ -29,6 +35,6 @@ export class UserController {
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.userService.remove(+id);
+    return this.userService.remove(id);
   }
 }
