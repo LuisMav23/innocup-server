@@ -1,1 +1,3 @@
-export class HealthInfo {}
+export class HealthInfo {
+
+}

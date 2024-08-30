@@ -8,6 +8,7 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
 
 import * as crypto from 'crypto';
+import axios from 'axios';
 
 @Injectable()
 export class UserService {
@@ -30,16 +31,32 @@ export class UserService {
   }
 
   async create(createUserDto: CreateUserDto): Promise<User> {
+
     try{
       createUserDto.password = this.hashPassword(createUserDto.password, true);
       const createdAt = new Date().getTime();
       console.log('Creating user:', createUserDto);
       const newUser = this.userRepository.create({...createUserDto, createdAt});
-      return await this.userRepository.save(newUser);
+      console.log('New user:', newUser);
+      await this.userRepository.save(newUser);
+      
+      const healthData = createUserDto.healthInfo;
+      const healthInfo = {
+        userId: newUser.id,
+        ...healthData
+      };
+
+      console.log('Creating health info:', healthInfo);
+
+      await axios.post('http://localhost:3000/health-info', healthInfo);
+
+      return newUser;
     }catch(e){
+      console.log('Error creating user:', e);
       throw new InternalServerErrorException(e);
     }
   }
+
   // async findAll(): Promise<User[]> {
   //   return await this.userRepository.find();
   // }

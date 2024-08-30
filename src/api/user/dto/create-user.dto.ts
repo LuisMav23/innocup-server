@@ -1,4 +1,5 @@
-import { IsString, IsEmail, IsInt, Min, Max, IsNotEmpty, IsPhoneNumber, IsDate } from 'class-validator';
+import { IsString, IsEmail, IsInt, Min, Max, IsNotEmpty, IsPhoneNumber, IsDate, IsObject } from 'class-validator';
+import { CreateHealthInfoDto } from '../../health_info/dto/create-health_info.dto';
 
 export class CreateUserDto {
     @IsString()
@@ -21,7 +22,6 @@ export class CreateUserDto {
     @IsNotEmpty()
     password: string;
 
-    @IsInt()
     @IsNotEmpty()
-    healthInfoId: number;
+    healthInfo: CreateHealthInfoDto;
 }

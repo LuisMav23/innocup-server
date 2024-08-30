@@ -9,6 +9,9 @@ export class HealthInfoController {
 
   @Post()
   create(@Body() createHealthInfoDto: CreateHealthInfoDto) {
+    if (!createHealthInfoDto.userId) {
+      throw new Error('userId is required');
+    }
     return this.healthInfoService.create(createHealthInfoDto);
   }
 
@@ -19,7 +22,12 @@ export class HealthInfoController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.healthInfoService.findOne(+id);
+    return this.healthInfoService.findById(id);
+  }
+
+  @Get('user/:userId')
+  findByUserId(@Param('userId') userId: string) {
+    return this.healthInfoService.findByUserId(userId);
   }
 
   @Patch(':id')
@@ -29,6 +37,6 @@ export class HealthInfoController {
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.healthInfoService.remove(+id);
+    return this.healthInfoService.remove(id);
   }
 }

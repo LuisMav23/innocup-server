@@ -1,4 +1,5 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { HealthInfo } from 'src/api/health_info/entities/health_info.entity';
+import { Entity, Column, PrimaryGeneratedColumn, OneToOne } from 'typeorm';
 
 @Entity( {name: 'users'} )
 export class User {
@@ -18,10 +19,10 @@ export class User {
     phoneNumber: string;
 
     @Column()
-    password: string;
-    
+    address: string;
+
     @Column()
-    healthInfoId: number;
+    password: string;
 
     @Column()
     createdAt: number;

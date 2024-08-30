@@ -1,0 +1,31 @@
+{
+  "userId": "3IuWgx0sDM0vywovny50o6wJ6qBNWyNtHe7B+un",
+  "bloodType": "A",
+  "chronicConditions": ["Hypertension", "Diabetes"],
+  "allergies": ["Peanuts", "Shellfish"],
+  "medications": ["Metformin", "Lisinopril"],
+  "healthRisks": ["Heart Disease", "Stroke"],
+  "pastSurgeries": ["Appendectomy", "Gallbladder Removal"],
+  "medicalDocuments": [
+    {
+      "documentName": "X-ray Report",
+      "documentUrl": "http://example.com/xray-report.pdf"
+    },
+    {
+      "documentName": "Blood Test Results",
+      "documentUrl": "http://example.com/blood-test-results.pdf"
+    }
+  ],
+  "medicalRecords": [
+    {
+      "recordName": "Annual Physical Exam",
+      "recordDate": "2023-01-15",
+      "details": "All vitals are normal."
+    },
+    {
+      "recordName": "Cardiologist Visit",
+      "recordDate": "2023-03-10",
+      "details": "Recommended lifestyle changes."
+    }
+  ]
+}
