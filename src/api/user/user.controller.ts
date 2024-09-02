@@ -1,36 +1,37 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, UploadedFile, Query } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { Multer } from 'multer';
 
 @Controller('user')
 export class UserController {
-  constructor(private readonly userService: UserService) {}
+  constructor(
+    private readonly userService: UserService,
+  ) {}
 
   @Post()
-  create(@Body() createUserDto: CreateUserDto) {
-    return this.userService.create(createUserDto);
+  @UseInterceptors(FileInterceptor('profilePicture'))
+  create(@Body() createUserDto: CreateUserDto, @UploadedFile() file: Multer.File) {
+    return this.userService.create(createUserDto, file);
   }
-
-  // @Get()
-  // findAll() {
-  //   return this.userService.findAll();
-  // }
 
   @Get(':id')
-  findOneById(@Param('id') id: string) {
-    return this.userService.findOneById(id);
+  findById(@Param('id') id: string) {
+    return this.userService.findById(id);
   }
 
-  @Get()
-  findOneByEmailAndPassword(@Body() emailAndPassword: { email: string, password: string }) {
+  @Get('login')
+  findOneByEmailAndPassword(@Query() emailAndPassword: { email: string, password: string }) {
     const { email, password } = emailAndPassword;
-    return this.userService.findOneByEmailAndPassword(email, password);
+    console.log('Finding user by email and password', email, password);
+    return this.userService.findByEmailAndPassword(email, password);
   }
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.userService.update(+id, updateUserDto);
+    return this.userService.update(id, updateUserDto);
   }
 
   @Delete(':id')

@@ -3,12 +3,15 @@ import { UserModule } from './user/user.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { HealthInfoModule } from './health_info/health_info.module';
+import { EmergencyContactModule } from './emergency_contact/emergency_contact.module';
 import configuration from './config';
 
 @Module({
   providers: [],
   imports: [
     UserModule,
+    HealthInfoModule,
+
     ConfigModule.forRoot({
       load: [configuration],
       isGlobal: true, // makes ConfigService globally available
@@ -27,7 +30,7 @@ import configuration from './config';
       }),
       inject: [ConfigService],
     }),
-    HealthInfoModule,
+    EmergencyContactModule,
   ]
 })
 export class ApiModule {}

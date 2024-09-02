@@ -7,6 +7,10 @@ import { UpdateUserDto } from './dto/update-user.dto';
 
 import { User } from './entities/user.entity';
 
+import { S3ServiceService } from 'src/core/s3_service/s3_service.service';
+
+import { Multer } from 'multer';
+
 import * as crypto from 'crypto';
 import axios from 'axios';
 
@@ -16,6 +20,7 @@ export class UserService {
   constructor(
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
+    private readonly s3Service: S3ServiceService
   ) {}
 
   private hashPassword(password: string, log: boolean): string {
@@ -30,27 +35,20 @@ export class UserService {
     return password;
   }
 
-  async create(createUserDto: CreateUserDto): Promise<User> {
+  async create(createUserDto: CreateUserDto, file: Multer.file ): Promise<User> {
+    let profilePicture: string;
+
+    if (file) {
+      profilePicture = await this.s3Service.uploadFile(file, 'innocup-bucket');
+    }
 
     try{
       createUserDto.password = this.hashPassword(createUserDto.password, true);
       const createdAt = new Date().getTime();
       console.log('Creating user:', createUserDto);
-      const newUser = this.userRepository.create({...createUserDto, createdAt});
+      const newUser = this.userRepository.create({...createUserDto, profilePicture, createdAt});
       console.log('New user:', newUser);
-      await this.userRepository.save(newUser);
-      
-      const healthData = createUserDto.healthInfo;
-      const healthInfo = {
-        userId: newUser.id,
-        ...healthData
-      };
-
-      console.log('Creating health info:', healthInfo);
-
-      await axios.post('http://localhost:3000/health-info', healthInfo);
-
-      return newUser;
+      return await this.userRepository.save(newUser);
     }catch(e){
       console.log('Error creating user:', e);
       throw new InternalServerErrorException(e);
@@ -61,12 +59,13 @@ export class UserService {
   //   return await this.userRepository.find();
   // }
 
-  async findOneById(id: string): Promise<User> {
+  async findById(id: string): Promise<User> {
     const res = await this.userRepository.findOne({ where: { id } });
     return res; 
   }
 
-  async findOneByEmailAndPassword(email: string, password: string): Promise<User> {
+  async findByEmailAndPassword(email: string, password: string): Promise<User> {
+    console.log('Finding user by email and password', email, password);
     const hashedPassword = this.hashPassword(password, true);
     const user = await this.userRepository.findOne({ where: { email, password: hashedPassword } });
     if (!user) {
@@ -75,10 +74,22 @@ export class UserService {
     return user;
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
+  async update(id: string, updateUserDto: UpdateUserDto): Promise<User> {
+    const user = await this.userRepository.findOne({ where: { id } });
+    if (!user) {
+      throw new NotFoundException(`User with ID ${id} not found`);
+    }
+
+    user.name = updateUserDto.name;
+    user.email = updateUserDto.email;
+    user.password = updateUserDto.password;
+    user.profilePicture = updateUserDto.profilePicture;
+    user.dateOfBirth = updateUserDto.dateOfBirth;
+
+    // Save the updated user
+    return await this.userRepository.save(user);
   }
-  
+
   async remove(id: string): Promise<void> {
     const result = await this.userRepository.delete(id);
     if (result.affected === 0) {
