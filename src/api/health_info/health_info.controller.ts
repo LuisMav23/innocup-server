@@ -1,7 +1,9 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, UploadedFile } from '@nestjs/common';
 import { HealthInfoService } from './health_info.service';
 import { CreateHealthInfoDto } from './dto/create-health_info.dto';
 import { UpdateHealthInfoDto } from './dto/update-health_info.dto';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { Multer } from 'multer';
 
 @Controller('health-info')
 export class HealthInfoController {
@@ -13,6 +15,13 @@ export class HealthInfoController {
       throw new Error('userId is required');
     }
     return this.healthInfoService.create(createHealthInfoDto);
+  }
+
+  @Post('medical-document/:healthInfoId')
+  @UseInterceptors(FileInterceptor('medicalDocument'))
+  uploadMedicalDocument(@Param('healthInfoId') healthInfoId, @Body() metaData: {documentName: string, documentDescription: string}, @UploadedFile() file: Multer.File) {
+    return this.healthInfoService.uploadMedicalDocument(healthInfoId, metaData, file)
+
   }
 
   @Get()
@@ -38,5 +47,10 @@ export class HealthInfoController {
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.healthInfoService.remove(id);
+  }
+
+  @Delete('medical-document/:healthInfoId/:documentId')
+  removeMedicalDocument(@Param('healthInfoId') healthInfoId: string, @Param('documentId') documentId: string) {
+    return this.healthInfoService.removeMedicalDocument(healthInfoId, documentId);
   }
 }

@@ -13,13 +13,8 @@ export class UserController {
 
   @Post()
   @UseInterceptors(FileInterceptor('profilePicture'))
-  create(@Body() createUserDto: CreateUserDto, @UploadedFile() file: Multer.File) {
-    return this.userService.create(createUserDto, file);
-  }
-
-  @Get(':id')
-  findById(@Param('id') id: string) {
-    return this.userService.findById(id);
+  create(@Body() createUserDto: CreateUserDto, @UploadedFile() profilePic: Multer.File) {
+    return this.userService.create(createUserDto, profilePic);
   }
 
   @Get('login')
@@ -29,9 +24,17 @@ export class UserController {
     return this.userService.findByEmailAndPassword(email, password);
   }
 
+  @Get('id/:id')
+  findById(@Param('id') id: string) {
+    console.log('Finding user by id');
+    return this.userService.findById(id);
+  }
+
+
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.userService.update(id, updateUserDto);
+  @UseInterceptors(FileInterceptor('profilePicture'))
+  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto, @UploadedFile() profilePic: Multer.File) {
+    return this.userService.update(id, updateUserDto, profilePic);
   }
 
   @Delete(':id')

@@ -1,70 +1,20 @@
 {
-  "userId": "3IuWgx0sDM0vywovny50o6wJ6qBNWyNtHe7B+un",
+  "userId": "1f48199b-c07e-463a-bca7-5c4543870f45",
   "bloodType": "A",
   "chronicConditions": ["Hypertension", "Diabetes"],
   "allergies": ["Peanuts", "Shellfish"],
   "medications": ["Metformin", "Lisinopril"],
   "healthRisks": ["Heart Disease", "Stroke"],
   "pastSurgeries": ["Appendectomy", "Gallbladder Removal"],
-  "medicalDocuments": [
-    {
-      "documentName": "X-ray Report",
-      "documentUrl": "http://example.com/xray-report.pdf"
-    },
-    {
-      "documentName": "Blood Test Results",
-      "documentUrl": "http://example.com/blood-test-results.pdf"
-    }
-  ],
-  "medicalRecords": [
-    {
-      "recordName": "Annual Physical Exam",
-      "recordDate": "2023-01-15",
-      "details": "All vitals are normal."
-    },
-    {
-      "recordName": "Cardiologist Visit",
-      "recordDate": "2023-03-10",
-      "details": "Recommended lifestyle changes."
-    }
-  ]
+  "medicalDocuments": [],
+  "medicalRecords": []
 }
 
 {
-  "name": "Luis Maverick L. Gabriel",
+  "name": "Luis",
+  "email": "luismaverick23@gmail.com",
+  "phoneNumber": "09334564717",
   "dateOfBirth": 20030523,
-  "email": "gabrielluismaverick@gmail.com",
-  "phoneNumber": "+639334564717",
-  "password": "luismav2323",
-  "health_info": {
-      "userId": "3IuWgx0sDM0vywovny50o6wJ6qBNWyNtHe7B+un",
-  "bloodType": "A",
-  "chronicConditions": ["Hypertension", "Diabetes"],
-  "allergies": ["Peanuts", "Shellfish"],
-  "medications": ["Metformin", "Lisinopril"],
-  "healthRisks": ["Heart Disease", "Stroke"],
-  "pastSurgeries": ["Appendectomy", "Gallbladder Removal"],
-  "medicalDocuments": [
-    {
-      "documentName": "X-ray Report",
-      "documentUrl": "http://example.com/xray-report.pdf"
-    },
-    {
-      "documentName": "Blood Test Results",
-      "documentUrl": "http://example.com/blood-test-results.pdf"
-    }
-  ],
-  "medicalRecords": [
-    {
-      "recordName": "Annual Physical Exam",
-      "recordDate": "2023-01-15",
-      "details": "All vitals are normal."
-    },
-    {
-      "recordName": "Cardiologist Visit",
-      "recordDate": "2023-03-10",
-      "details": "Recommended lifestyle changes."
-    }
-  ]
-  }
+  "address": "58 M. Ablola St. Tangos South, Navotas City",
+  "password": "a823832d933026fe7259f3672e5fca47fe683006f63493ee10de2badf4dc1ccd"
 }

@@ -1,4 +1,8 @@
-import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  InternalServerErrorException,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
@@ -16,11 +20,10 @@ import axios from 'axios';
 
 @Injectable()
 export class UserService {
-
   constructor(
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
-    private readonly s3Service: S3ServiceService
+    private readonly s3Service: S3ServiceService,
   ) {}
 
   private hashPassword(password: string, log: boolean): string {
@@ -35,21 +38,25 @@ export class UserService {
     return password;
   }
 
-  async create(createUserDto: CreateUserDto, file: Multer.file ): Promise<User> {
+  async create(createUserDto: CreateUserDto, profilePic: Multer.file): Promise<User> {
     let profilePicture: string;
 
-    if (file) {
-      profilePicture = await this.s3Service.uploadFile(file, 'innocup-bucket');
+    if (profilePic) {
+      profilePicture = await this.s3Service.uploadFile(profilePic, 'innocup-bucket');
     }
 
-    try{
+    try {
       createUserDto.password = this.hashPassword(createUserDto.password, true);
       const createdAt = new Date().getTime();
       console.log('Creating user:', createUserDto);
-      const newUser = this.userRepository.create({...createUserDto, profilePicture, createdAt});
+      const newUser = this.userRepository.create({
+        ...createUserDto,
+        profilePicture,
+        createdAt,
+      });
       console.log('New user:', newUser);
       return await this.userRepository.save(newUser);
-    }catch(e){
+    } catch (e) {
       console.log('Error creating user:', e);
       throw new InternalServerErrorException(e);
     }
@@ -61,30 +68,52 @@ export class UserService {
 
   async findById(id: string): Promise<User> {
     const res = await this.userRepository.findOne({ where: { id } });
-    return res; 
+    return res;
   }
 
   async findByEmailAndPassword(email: string, password: string): Promise<User> {
     console.log('Finding user by email and password', email, password);
     const hashedPassword = this.hashPassword(password, true);
-    const user = await this.userRepository.findOne({ where: { email, password: hashedPassword } });
+    const user = await this.userRepository.findOne({
+      where: { email, password: hashedPassword },
+    });
     if (!user) {
       throw new NotFoundException('User not found or incorrect password');
     }
     return user;
   }
 
-  async update(id: string, updateUserDto: UpdateUserDto): Promise<User> {
+  async update(id: string, updateUserDto: UpdateUserDto, profilePic: Multer.file): Promise<User> {
+    const user = await this.userRepository.findOne({ where: { id } });
+    if (!user) {
+      throw new NotFoundException(`User with ID ${id} not found`);
+    }
+    
+    user.name = updateUserDto.name;
+    user.email = updateUserDto.email;
+    user.password = updateUserDto.password;
+    user.phoneNumber = updateUserDto.phoneNumber;
+    user.address = updateUserDto.address
+    user.dateOfBirth = updateUserDto.dateOfBirth;
+
+    if (profilePic) {
+      console.log('Updating profile picture:', profilePic);
+      const profilePicture = await this.s3Service.uploadFile(profilePic, 'innocup-bucket');
+      user.profilePicture = profilePicture;
+    }
+
+    // Save the updated user
+    return await this.userRepository.save(user);
+  }
+
+  async updateProfilePicture(id: string, file: Multer.File): Promise<User> {
     const user = await this.userRepository.findOne({ where: { id } });
     if (!user) {
       throw new NotFoundException(`User with ID ${id} not found`);
     }
 
-    user.name = updateUserDto.name;
-    user.email = updateUserDto.email;
-    user.password = updateUserDto.password;
-    user.profilePicture = updateUserDto.profilePicture;
-    user.dateOfBirth = updateUserDto.dateOfBirth;
+    const profilePicture = await this.s3Service.uploadFile(file, 'innocup-bucket');
+    user.profilePicture = profilePicture;
 
     // Save the updated user
     return await this.userRepository.save(user);
@@ -92,6 +121,7 @@ export class UserService {
 
   async remove(id: string): Promise<void> {
     const result = await this.userRepository.delete(id);
+    const rmPfp = await this.s3Service.deleteFile(id, 'innocup-bucket');
     if (result.affected === 0) {
       throw new NotFoundException(`User with ID ${id} not found`);
     }
