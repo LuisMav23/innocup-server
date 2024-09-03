@@ -30,8 +30,17 @@ export class EmergencyContactService {
     }
   }
 
-  findAll() {
-    return `This action returns all emergencyContact`;
+  async findAllContactsByUserId(userId: string ): Promise<any> {
+    try{
+      const res = await this.emergencyContactRepository.find({ where: { user: { id: userId } } });
+      if (res.length === 0) {
+        throw new Error('No emergency contacts found for user');
+      }
+      return res;
+    }catch(e){
+      console.log('Error finding emergency contacts:', e);
+      throw new InternalServerErrorException(e);
+    }
   }
 
   findOne(id: number) {

@@ -1,4 +1,5 @@
-import { Entity, Column, PrimaryGeneratedColumn, OneToOne } from 'typeorm';
+import { EmergencyContact } from 'src/api/emergency_contact/entities/emergency_contact.entity';
+import { Entity, Column, PrimaryGeneratedColumn, OneToOne, OneToMany } from 'typeorm';
 
 @Entity( {name: 'users'} )
 export class User {
@@ -35,4 +36,7 @@ export class User {
 
     @Column()
     createdAt: number;
+
+    @OneToMany(() => EmergencyContact, emergencyContact => emergencyContact.user)
+    emergencyContacts: EmergencyContact[];
 }

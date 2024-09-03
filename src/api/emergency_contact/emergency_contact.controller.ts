@@ -12,9 +12,9 @@ export class EmergencyContactController {
     return this.emergencyContactService.create(createEmergencyContactDto, userId);
   }
 
-  @Get()
-  findAll() {
-    return this.emergencyContactService.findAll();
+  @Get('user/all/:userId')
+  findAllContactsByUserId(@Param('userId') userId: string) {
+    return this.emergencyContactService.findAllContactsByUserId(userId);
   }
 
   @Get(':id')

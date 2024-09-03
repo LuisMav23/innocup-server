@@ -6,9 +6,9 @@ export class EmergencyContact {
     @PrimaryGeneratedColumn('uuid')
     id: string;
 
-    @ManyToOne(() => User, user => user.id)
+    @ManyToOne(() => User, user => user.emergencyContacts)
     @JoinColumn({ name: 'userId' })
-    userId: string;
+    user: User;
 
     @Column()
     name: string;
