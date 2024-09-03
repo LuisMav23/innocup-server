@@ -1,7 +1,7 @@
 import { Column, Entity, PrimaryGeneratedColumn, ManyToOne, JoinColumn } from "typeorm";
 import { User } from '../../user/entities/user.entity'; 
 
-@Entity()
+@Entity({ name: 'emergency_contacts' })
 export class EmergencyContact {
     @PrimaryGeneratedColumn('uuid')
     id: string;
@@ -18,4 +18,7 @@ export class EmergencyContact {
 
     @Column()
     relationship: string;
+
+    @Column()
+    createdAt: number;
 }

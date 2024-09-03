@@ -7,9 +7,9 @@ import { UpdateEmergencyContactDto } from './dto/update-emergency_contact.dto';
 export class EmergencyContactController {
   constructor(private readonly emergencyContactService: EmergencyContactService) {}
 
-  @Post()
-  create(@Body() createEmergencyContactDto: CreateEmergencyContactDto) {
-    return this.emergencyContactService.create(createEmergencyContactDto);
+  @Post('add/:userId')
+  create(@Body() createEmergencyContactDto: CreateEmergencyContactDto, @Param('userId') userId: string) {
+    return this.emergencyContactService.create(createEmergencyContactDto, userId);
   }
 
   @Get()

@@ -1,11 +1,33 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { CreateEmergencyContactDto } from './dto/create-emergency_contact.dto';
 import { UpdateEmergencyContactDto } from './dto/update-emergency_contact.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { EmergencyContact } from './entities/emergency_contact.entity';
+import { v4 as uuidv4 } from 'uuid';
 
 @Injectable()
 export class EmergencyContactService {
-  create(createEmergencyContactDto: CreateEmergencyContactDto) {
-    return 'This action adds a new emergencyContact';
+
+  constructor(
+    @InjectRepository(EmergencyContact)
+    private emergencyContactRepository: Repository<EmergencyContact>
+  ) {}
+
+  create(createEmergencyContactDto: CreateEmergencyContactDto, userId: string) {
+    try{
+      const createdAt = new Date().getTime();
+      const newEmergencyContactData = {
+        userId,
+        ...createEmergencyContactDto,
+        createdAt
+      }
+      const newEmergencyContact = this.emergencyContactRepository.create(newEmergencyContactData);
+      return this.emergencyContactRepository.save(newEmergencyContact);
+    }catch(e){
+      console.log('Error creating emergency contact:', e);
+      throw new InternalServerErrorException(e);
+    }
   }
 
   findAll() {

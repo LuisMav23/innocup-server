@@ -1,0 +1,29 @@
+{
+"testdata":[
+    {
+      "userId": "1f48199b-c07e-463a-bca7-5c4543870f45",
+      "bloodType": "A",
+      "chronicConditions": ["Hypertension", "Diabetes"],
+      "allergies": ["Peanuts", "Shellfish"],
+      "medications": ["Metformin", "Lisinopril"],
+      "healthRisks": ["Heart Disease", "Stroke"],
+      "pastSurgeries": ["Appendectomy", "Gallbladder Removal"],
+      "medicalDocuments": [],
+      "medicalRecords": []
+    },
+    {
+      "name": "Luis",
+      "email": "luismaverick23@gmail.com",
+      "phoneNumber": "09334564717",
+      "dateOfBirth": 20030523,
+      "address": "58 M. Ablola St. Tangos South, Navotas City",
+      "password": "a823832d933026fe7259f3672e5fca47fe683006f63493ee10de2badf4dc1ccd"
+    },
+    {
+      "userId": "1f48199b-c07e-463a-bca7-5c4543870f45",
+      "name": "Mary Grace Gabriel",
+      "phoneNumber": "09238052169",
+      "relationship": "Mother"
+    }
+  ]
+}
